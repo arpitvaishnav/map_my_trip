@@ -7,7 +7,7 @@
   .form-group
     = f.label :travel_city_id, class: 'control-label col-lg-2'
     .col-lg-10
-      = f.collection_select :travel_city_id, TravelCity.all, :id, :from_city, class: 'form-control', required: true
+      = f.collection_select :travel_city_id, TravelCity.all, :id, :to_city, class: 'form-control', required: true
     = f.error_span(:travel_city_id)
   .form-group
     .col-lg-offset-2.col-lg-10

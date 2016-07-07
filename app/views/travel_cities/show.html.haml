@@ -27,9 +27,8 @@
   %br
   = @travel_city.trip_id
 
-%p
-  %strong Journey
-  =@travel_city.travel_cities.each do 
+
+    
 = link_to t('.back', :default => t("helpers.links.back")), travel_cities_path, :class => 'btn btn-default'
 = link_to t('.edit', :default => t("helpers.links.edit")), edit_travel_city_path(@travel_city), :class => 'btn btn-default'
 = link_to t('.destroy', :default => t("helpers.links.destroy")), travel_city_path(@travel_city), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'

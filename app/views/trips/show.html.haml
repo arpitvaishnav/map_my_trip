@@ -18,6 +18,10 @@
   %strong= model_class.human_attribute_name(:to_date) + ':'
   %br
   = @trip.to_date
+  %p
+  %strong= model_class.human_attribute_name(:image) + ':'
+  %br
+  =image_tag @trip.image.image.url
 %p
   %strong Journey
   - @trip.travel_cities.each_with_index do |city, index|
