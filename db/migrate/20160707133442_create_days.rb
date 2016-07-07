@@ -1,0 +1,10 @@
+class CreateDays < ActiveRecord::Migration
+  def change
+    create_table :days do |t|
+      t.string :name
+      t.references :travel_city, index: true, foreign_key: true
+
+      t.timestamps null: false
+    end
+  end
+end

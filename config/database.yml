@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  encoding: utf8
+  pool: 5
+  user: arpit
+  password: arpit
+  host: localhost
+  port: 5432
+  sslmode: disable
+
+development:
+  <<: *default
+  database: map_my_trip_development
+test:
+  <<: *default
+  database: map_my_trip_test
+production:
+  <<: *default
+  database: map_my_trip_production
+  username: map_my_trip
+  password: <%= ENV['MAP_MY_TRIP_DATABASE_PASSWORD'] %>

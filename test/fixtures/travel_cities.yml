@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  from_city: MyString
+  to_city: 
+  started_on: 
+  reache_on: 2016-07-07 17:06:15
+  how_id: 1
+  trip_id: 
+
+two:
+  from_city: MyString
+  to_city: 
+  started_on: 
+  reache_on: 2016-07-07 17:06:15
+  how_id: 1
+  trip_id: 
