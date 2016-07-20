@@ -14,5 +14,17 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require bootstrap
+//= require moment
+//= require bootstrap-datetimepicker
 //= require turbolinks
 //= require_tree .
+
+
+
+$(document).on('turbolinks:load', function() {
+  $('#trip_to_date, #trip_from_date, #travel_city_started_on, #travel_city_reache_on').datetimepicker({
+      inline: false,
+      sideBySide: true
+  });
+  initAutocomplete();
+});

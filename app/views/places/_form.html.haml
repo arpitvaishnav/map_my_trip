@@ -1,0 +1,23 @@
+= form_for @place, html: { class: "form form-horizontal place" } do |f|
+  .form-group
+    = f.label :place, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.text_field :place, class: 'form-control', required: true
+    = f.error_span(:place)
+  .form-group
+    = f.label :description, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.text_field :description, class: 'form-control', required: true
+    = f.error_span(:description)
+  .form-group
+    = f.label :image, class: 'control-label col-lg-2'
+    .col-lg-10
+      = f.fields_for :images do |image_fields|
+        = image_fields.file_field :image
+        = f.error_span(:images)
+  - if params[:day_id]        
+    = f.hidden_field :day_id, value: params[:day_id]
+  .form-group
+    .col-lg-offset-2.col-lg-10
+      = f.submit nil,class: 'btn btn-primary'
+      = link_to t('.cancel', :default => t("helpers.links.cancel")), places_path, :class => 'btn btn-default'

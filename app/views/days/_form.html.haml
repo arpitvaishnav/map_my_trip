@@ -4,11 +4,14 @@
     .col-lg-10
       = f.text_field :name, class: 'form-control', required: true
     = f.error_span(:name)
-  .form-group
-    = f.label :travel_city_id, class: 'control-label col-lg-2'
-    .col-lg-10
-      = f.collection_select :travel_city_id, TravelCity.all, :id, :to_city, class: 'form-control', required: true
-    = f.error_span(:travel_city_id)
+  - if params[:travel_city_id]
+    = f.hidden_field :travel_city_id, value: params[:travel_city_id]
+  -else
+    .form-group
+      = f.label :travel_city_id, class: 'control-label col-lg-2'
+      .col-lg-10
+        = f.collection_select :travel_city_id, TravelCity.all, :id, :to_city, class: 'form-control', required: true
+      = f.error_span(:travel_city_id)
   .form-group
     .col-lg-offset-2.col-lg-10
       = f.submit nil,class: 'btn btn-primary'

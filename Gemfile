@@ -53,5 +53,6 @@ gem 'dragonfly', '~> 1.0.12'
 gem 'dragonfly-activerecord'
 gem "haml-rails", "~> 0.9"
 gem 'twitter-bootstrap-rails', :git => 'git://github.com/seyhunak/twitter-bootstrap-rails.git'
-
+gem 'momentjs-rails', '>= 2.9.0'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.17.37'
 

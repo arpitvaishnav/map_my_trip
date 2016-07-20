@@ -1,13 +1,20 @@
 = form_for @travel_city, html: { class: "form form-horizontal travel_city" } do |f|
+  =f.hidden_field :from_lng
+  =f.hidden_field :from_lat
+  =f.hidden_field :from_address
+  =f.hidden_field :to_lng
+  =f.hidden_field :to_lat
+  =f.hidden_field :to_address
   .form-group
     = f.label :from_city, class: 'control-label col-lg-2'
-    .col-lg-10
-      = f.text_field :from_city, class: 'form-control', required: true
+    .col-lg-10#locationField
+      = f.text_field :from_city, class: 'form-control', required: true ,id: 'autocomplete_from', placeholder: "Enter your address", onFocus: "geolocate_from()"
     = f.error_span(:from_city)
   .form-group
     = f.label :to_city, class: 'control-label col-lg-2'
     .col-lg-10
-      = f.text_field :to_city, class: 'form-control', required: true
+      =# f.text_field :to_city, class: 'form-control', required: true
+      = f.text_field :to_city, class: 'form-control', required: true ,id: 'autocomplete_to', placeholder: "Enter your address", onFocus: "geolocate_to()"
     = f.error_span(:to_city)
   .form-group
     = f.label :started_on, class: 'control-label col-lg-2'
@@ -24,12 +31,16 @@
     .col-lg-10
       = f.text_field :how_id, class: 'form-control', required: true
     = f.error_span(:how_id)
-  .form-group
-    = f.label :trip_id, class: 'control-label col-lg-2'
-    .col-lg-10
-      = f.collection_select :trip_id, Trip.all, :id, :name, class: 'form-control', required: true
-    = f.error_span(:trip_id)
+  - if params[:trip_id]
+    = f.hidden_field :trip_id, value: params[:trip_id]
+  -else
+    .form-group
+      = f.label :trip_id, class: 'control-label col-lg-2'
+      .col-lg-10
+        = f.collection_select :trip_id, Trip.all, :id, :name, class: 'form-control', required: true
+      = f.error_span(:trip_id)
   .form-group
     .col-lg-offset-2.col-lg-10
       = f.submit nil,class: 'btn btn-primary'
       = link_to t('.cancel', :default => t("helpers.links.cancel")), travel_cities_path, :class => 'btn btn-default'
+%script{:async => "", :defer => "", :src => "https://maps.googleapis.com/maps/api/js?key=AIzaSyBQNcS2e8-5L2lAvhiWY_goCcCQb4N7Ya8&libraries=places&callback=initAutocomplete"}

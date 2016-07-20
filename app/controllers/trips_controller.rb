@@ -10,6 +10,11 @@ class TripsController < ApplicationController
   # GET /trips/1
   # GET /trips/1.json
   def show
+    @travel_cities = []
+    @trip.travel_cities.order('created_at asc').each_with_index do |travel, index|
+        @travel_cities.push({label: "#{index + 1}",title: travel.from_city, lat: travel.from_lat.to_f, lng: travel.from_lng.to_f})
+    end
+    @travel_cities.push({label: "", title: @trip.travel_cities.order('created_at asc').last.to_city, lat: @trip.travel_cities.order('created_at asc').last.to_lat.to_f, lng: @trip.travel_cities.order('created_at asc').last.to_lng.to_f})
   end
 
   # GET /trips/new

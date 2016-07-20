@@ -28,7 +28,7 @@ class TravelCitiesController < ApplicationController
 
     respond_to do |format|
       if @travel_city.save
-        format.html { redirect_to @travel_city, notice: 'Travel city was successfully created.' }
+        format.html { redirect_to @travel_city.trip, notice: 'Travel city was successfully created.' }
         format.json { render :show, status: :created, location: @travel_city }
       else
         format.html { render :new }
@@ -54,7 +54,7 @@ class TravelCitiesController < ApplicationController
   # DELETE /travel_cities/1
   # DELETE /travel_cities/1.json
   def destroy
-    @travel_city.destroy
+    @travel_city.delet
     respond_to do |format|
       format.html { redirect_to travel_cities_url, notice: 'Travel city was successfully destroyed.' }
       format.json { head :no_content }
@@ -69,6 +69,6 @@ class TravelCitiesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def travel_city_params
-      params.require(:travel_city).permit(:from_city, :to_city, :started_on, :reache_on, :how_id, :trip_id)
+      params.require(:travel_city).permit(:from_city, :to_city, :started_on, :reache_on, :how_id, :trip_id, :from_lng, :from_lat, :to_lat, :to_lng)
     end
 end

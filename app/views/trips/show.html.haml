@@ -1,3 +1,12 @@
+:css
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  #map {
+    height: 100%;
+  }
 - model_class = Trip
 .page-header
   %h1=t '.title', :default => model_class.model_name.human.titleize
@@ -19,26 +28,109 @@
   %br
   = @trip.to_date
   %p
-  %strong= model_class.human_attribute_name(:image) + ':'
-  %br
-  =image_tag @trip.image.image.url
+  - if @trip.image.present?
+    %strong= model_class.human_attribute_name(:image) + ':'
+    %br
+    =image_tag @trip.image.image.thumb('160x80>').url
 %p
   %strong Journey
+  = link_to "+", new_travel_city_path(trip_id: @trip), :class => 'btn btn-primary'
+  =@travel_cities.to_json
+  %div{style: 'width:700px;height:400px'}
+    #map
+    :javascript
+      var markers = #{@travel_cities.to_json};;
+       window.onload = function () {
+           var mapOptions = {
+               center: new google.maps.LatLng(markers[0].lat, markers[0].lng),
+               zoom: 10,
+               mapTypeId: google.maps.MapTypeId.ROADMAP
+           };
+           var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+           var infoWindow = new google.maps.InfoWindow();
+           var lat_lng = new Array();
+           var latlngbounds = new google.maps.LatLngBounds();
+           for (i = 0; i < markers.length; i++) {
+               var data = markers[i]
+               var myLatlng = new google.maps.LatLng(data.lat, data.lng);
+               lat_lng.push(myLatlng);
+               var marker = new google.maps.Marker({
+                   position: myLatlng,
+                   map: map,
+                   title: data.title,
+                   label: data.label
+               });
+               latlngbounds.extend(marker.position);
+               (function (marker, data) {
+                   google.maps.event.addListener(marker, "click", function (e) {
+                       infoWindow.setContent(data.description);
+                       infoWindow.open(map, marker);
+                   });
+               })(marker, data);
+           }
+           map.setCenter(latlngbounds.getCenter());
+           map.fitBounds(latlngbounds);
+     
+           //***********ROUTING****************//
+     
+           //Initialize the Path Array
+           var path = new google.maps.MVCArray();
+     
+           //Initialize the Direction Service
+           var service = new google.maps.DirectionsService();
+     
+           //Set the Path Stroke Color
+           var poly = new google.maps.Polyline({ map: map, strokeColor: '#4986E7' });
+     
+           //Loop and Draw Path Route between the Points on MAP
+           for (var i = 0; i < lat_lng.length; i++) {
+               if ((i + 1) < lat_lng.length) {
+                   var src = lat_lng[i];
+                   var des = lat_lng[i + 1];
+                   // path.push(src);
+                   poly.setPath(path);
+                   service.route({
+                       origin: src,
+                       destination: des,
+                       travelMode: google.maps.DirectionsTravelMode.DRIVING
+                   }, function (result, status) {
+                       if (status == google.maps.DirectionsStatus.OK) {
+                           for (var i = 0, len = result.routes[0].overview_path.length; i < len; i++) {
+                               path.push(result.routes[0].overview_path[i]);
+                           }
+                       }
+                   });
+               }
+           }
+       }
   - @trip.travel_cities.each_with_index do |city, index|
     %br
     %strong="#{index + 1} ) "
     ="#{city.from_city} to #{city.to_city} by #{city.how_id} (#{city.started_on.strftime('%x %H:%M')} - #{city.reache_on.strftime('%x %H:%M')})"
     %strong= "With - "
-    %br 
-      %p
-        Days
-        -city.days.each_with_index do |day, index|
-          = "#{index + 1 } ) #{day.name}"
+    %div{style: 'padding-left:20px'}
+      %strong Days
+      = link_to "+", new_day_path(travel_city_id: city), :class => 'btn btn-primary'
+      %br
+      -city.days.each_with_index do |day, index|
+        %strong= "#{index + 1 } ) #{day.name}"
+        %div{style: 'padding-left:20px'}
+          %strong Places
+          = link_to "+", new_place_path(day_id: day), :class => 'btn btn-primary'
+          - if day.places.present?
+            %br
+            - day.places.each_with_index do |place , index|
+              %strong= "#{index + 1} ) #{place.place} -"  
+              = place.description
+              - if place.images.present?
+                = image_tag place.images.first.image.thumb('40x20#').url
 
     %br
-    %br
-
+    
 
 = link_to t('.back', :default => t("helpers.links.back")), trips_path, :class => 'btn btn-default'
 = link_to t('.edit', :default => t("helpers.links.edit")), edit_trip_path(@trip), :class => 'btn btn-default'
 = link_to t('.destroy', :default => t("helpers.links.destroy")), trip_path(@trip), :method => "delete", :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-danger'
+
+//%script{:async => "", :defer => "", :src => "https://maps.googleapis.com/maps/api/js?key=AIzaSyBQNcS2e8-5L2lAvhiWY_goCcCQb4N7Ya8&libraries=places&callback=initMap"}
+%script{:src => "http://maps.googleapis.com/maps/api/js?sensor=false", :type => "text/javascript"}

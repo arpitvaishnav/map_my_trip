@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160707133442) do
+ActiveRecord::Schema.define(version: 20160711065816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,16 @@ ActiveRecord::Schema.define(version: 20160707133442) do
 
   add_index "images", ["imageable_type", "imageable_id"], name: "index_images_on_imageable_type_and_imageable_id", using: :btree
 
+  create_table "places", force: :cascade do |t|
+    t.string   "place"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "day_id"
+  end
+
+  add_index "places", ["day_id"], name: "index_places_on_day_id", using: :btree
+
   create_table "storage_chunks", force: :cascade do |t|
     t.integer "file_id"
     t.integer "idx"
@@ -58,8 +68,14 @@ ActiveRecord::Schema.define(version: 20160707133442) do
     t.datetime "reache_on"
     t.integer  "how_id"
     t.integer  "trip_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "from_lng"
+    t.string   "from_lat"
+    t.string   "from_address"
+    t.string   "to_lng"
+    t.string   "to_lat"
+    t.string   "to_address"
   end
 
   add_index "travel_cities", ["trip_id"], name: "index_travel_cities_on_trip_id", using: :btree
